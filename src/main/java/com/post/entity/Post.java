@@ -26,6 +26,11 @@ public class Post {
     private String title;
 
     @NotNull
+    @Size(min = 5, message = "Description should be atleast 5 characters")
+    @Column(name = "description", nullable = false, length = 45)
+    private String description;
+
+    @NotNull
     @Size(min = 10, message = "Content should not be less than 10 words")
     @Column(name = "content", nullable = false)
     private String content;

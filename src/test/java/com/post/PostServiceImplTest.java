@@ -2,7 +2,7 @@ package com.post;
 import com.post.entity.Post;
 import com.post.payload.PostDto;
 import com.post.repository.PostRepository;
-import com.post.seccurity.impl.PostServiceImpl;
+import com.post.services.impl.PostServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,6 +10,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import java.util.Optional;
+import java.util.UUID;
+
+
+import static jakarta.persistence.GenerationType.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -60,6 +65,27 @@ public class PostServiceImplTest {
         assertNotNull(postDto.getTitle()); // Ensure the title in PostDto is not null
         assertEquals("Test Title", postDto.getTitle()); // Ensure it matches the expected title
         assertEquals("Test Content", postDto.getContent());
+    }
+
+    @Test
+    void getPostByIdTest() {
+        // Given
+        String postId = "any-random-uuid-string";
+        Post mockPost = new Post();
+        mockPost.setId(postId);
+        mockPost.setTitle("Sample Title");
+
+        when(postRepository.findById(postId)).thenReturn(Optional.of(mockPost));
+
+        // When
+
+        PostDto postDto = postService.getPostById(postId);
+
+
+        // Then
+        assertNotNull(postDto, "PostDto should not be null");
+        assertEquals(mockPost.getTitle(), postDto.getTitle(), "PostDto title should match");
+        verify(postRepository, times(1)).findById(postId);
     }
 
 }

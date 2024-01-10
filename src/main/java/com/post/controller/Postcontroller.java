@@ -2,7 +2,7 @@ package com.post.controller;
 
 import com.post.entity.Post;
 import com.post.payload.PostDto;
-import com.post.seccurity.PostService;
+import com.post.services.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,8 @@ public class Postcontroller {
 
     private final PostService postService;
 
-    @PostMapping
+    // http://localhost:8081/api/post-service/create-post
+    @PostMapping("/create-post")
     public ResponseEntity<?> createPost(@Valid @RequestBody Post post, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             return new ResponseEntity<>(bindingResult.getFieldError().getDefaultMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -27,4 +28,16 @@ public class Postcontroller {
 
         return new ResponseEntity<>(postDto, HttpStatus.CREATED);
     }
+
+    // http://localhost:8081/api/post-service/{postId}
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostDto> getPostById(@PathVariable String postId){
+        PostDto postDto = postService.getPostById(postId);
+        return new ResponseEntity<>(postDto, HttpStatus.OK);
+    }
+
+
+
+
+
 }
